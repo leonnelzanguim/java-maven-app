@@ -1,20 +1,31 @@
-#!/usr/bin.env groovy
+def gv
 
 pipeline {   
     agent any
+    tools {
+        maven 'Maven'
+    }
     stages {
-        stage("test") {
+        stage("init") {
             steps {
                 script {
-                    echo "Testing the application..."
+                    gv = load "script.groovy"
+                }
+            }
+        }
+        stage("build jar") {
+            steps {
+                script {
+                    gv.buildJar()
 
                 }
             }
         }
-        stage("build") {
+
+        stage("build image") {
             steps {
                 script {
-                    echo "Building the application..."
+                    gv.buildImage()
                 }
             }
         }
@@ -22,7 +33,7 @@ pipeline {
         stage("deploy") {
             steps {
                 script {
-                    echo "Deploying the application..."
+                    gv.deployApp()
                 }
             }
         }               
